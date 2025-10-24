@@ -23,11 +23,53 @@ const { NotImplementedError } = require('../lib');
  *  [1, 1, 1]
  * ]
  */
-function minesweeper(/* matrix */) {
-  // Remove line below and write your code here
-  throw new NotImplementedError('Not implemented');
-}
+function minesweeper(matrix) {
+  const colLen = matrix.length;
+  const rowLen = matrix[0].length;
+  const mineField = Array.from({length: colLen}, () => {
+    return Array.from({length: rowLen}, () => 1);
+  });
 
+  for (let i = 0; i < colLen; i++) {
+    for (let j = 0; j < rowLen; j++) {
+      if (matrix[i][j]) continue;
+
+      let bombs = 0;
+
+      const topInReach = i - 1 >= 0;
+      const bottomInReach = i + 1 < colLen;
+      const leftInReach = j - 1 >= 0;
+      const rightInReach = j + 1 < rowLen;
+
+      if (leftInReach) {
+        if (matrix[i][j-1]) bombs++;
+      }
+      if (rightInReach) {
+        if (matrix[i][j+1]) bombs++;
+      }
+      if (topInReach) {
+        if (matrix[i-1][j]) bombs++;
+      }
+      if (bottomInReach) {
+        if (matrix[i+1][j]) bombs++;
+      }
+      if (topInReach && leftInReach) {
+        if (matrix[i-1][j-1]) bombs++;
+      }
+      if (topInReach && rightInReach) {
+        if (matrix[i-1][j+1]) bombs++;
+      }
+      if (bottomInReach && leftInReach) {
+        if (matrix[i+1][j-1]) bombs++;
+      }
+      if (bottomInReach && rightInReach) {
+        if (matrix[i+1][j+1]) bombs++;
+      }
+      mineField[i][j] = bombs;
+    }
+  }
+  return mineField;
+}
 module.exports = {
   minesweeper
 };
